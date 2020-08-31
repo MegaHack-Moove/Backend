@@ -1,0 +1,131 @@
+passport.use('local', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password'
+},
+  function (username, password, done) {
+    knex('user')
+      .where('email', '=', username)
+      .then((err, user) => {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect email.' });
+        }
+        if (!user.isValid(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      })
+  }
+));
+
+
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors');
+var user = require('./users.js')
+
+app.use(express.static('public'))
+app.use(bodyParser.json())
+
+// cors
+app.use(cors({
+  origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+  credentials: true,
+}));
+
+// listen on port
+app.listen(3030, () => console.log('Server started at port: 3030'));
+
+// routes
+app.use('/api', user);
+
+
+
+const knex = require("./db.js")
+
+knex.schema
+  .hasTable('user', (exists) => {
+    if (!exists) {
+      knex.schema
+        .createTable('user', (table) => {
+          table.increments('id')
+          table.string('firstname').notNullable()
+          table.string('lastname').notNullable()
+          table.string('email').notNullable()
+          table.string('password').notNullable()
+        })
+        .then(() => {
+          console.log('>> User table created successfully.')
+        })
+        .catch(() => {
+          console.log('>> An error occur while creating table User.')
+        })
+    }
+  })
+
+module.exports = knex
+
+
+var express = require('express')
+var router = express.Router()
+const knex = require('./user.js')
+const passport = require('./local.js')
+
+router.post('/register', (req, res) => {
+  knex
+    .from('user')
+    .insert({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      password: req.body.password,
+    })
+    .then(() => {
+      res.json({ success: true, message: "Data successfully inserted." })
+    })
+    .catch(() => {
+      res.json({ success: false, message: "Error in adding user. Please try again." })
+    })
+})
+
+function handleResponse(res, code, statusMsg) {
+  res.status(code).json({ status: statusMsg });
+}
+
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      handleResponse(res, 500, 'error');
+    }
+    if (!user) {
+      handleResponse(res, 404, 'User not found');
+    }
+    if (user) {
+      req.logIn(user, function (err) {
+        if (err) {
+          handleResponse(res, 500, 'error');
+        }
+        handleResponse(res, 200, 'success');
+      });
+    }
+  })(req, res, next);
+});
+
+module.exports = router
+
+
+const { Router } = require('express')
+const routes = Router();
+const ProdutoController = require('./Controllers/ProdutosController')
+
+
+ routes.get('/produto', ProdutoController.index);
+ routes.post('/produto', ProdutoController.create);
+ routes.put('/produto', ProdutoController.update);
+ routes.get('/produto/:_id', ProdutoController.show);
+ routes.patch('/produto/update/:id', ProdutoController.updatePatch)
+ routes.delete('/produto/:_id', ProdutoController.destroy);
+
+
+ module.exports = routes
