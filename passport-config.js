@@ -1,5 +1,5 @@
 const passport = require('passport');
-const knex = require('./db.js');
+const knex = require('./database/db');
 
 module.exports = () => {
 

@@ -6,6 +6,6 @@ routes.get('/', (req, res, next) => {
     res.send('OK');
 });
 
-routes.post('/', UsersController.create);
+routes.post('/register', UsersController.register);
 
 module.exports = routes;

@@ -1,9 +1,9 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const init = require('./passport-config.js');
-const knex = require('./db.js');
-const utils = require('./utils.js');
+const init = require('../passport-config');
+const knex = require('../database/db');
+const utils = require('../utils');
 
 const options = {};
 

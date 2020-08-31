@@ -4,6 +4,9 @@ const cors = require('cors');
 // var user = require('./users.js')
 const routes = require('./routes');
 
+const app = express();
+const port = (process.env.PORT || 3333);
+
 app.use(express.static('public'))
 app.use(bodyParser.json())
 
@@ -12,9 +15,6 @@ app.use(cors({
     origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
     credentials: true,
 }));
-
-const app = express();
-const port = (process.env.PORT || 3333);
 
 app.listen(port, () => console.log(`Listening on port ${port}`) ) 
 
