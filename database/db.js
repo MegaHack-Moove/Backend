@@ -6,7 +6,7 @@ var knex = new Knex(
     connection: {
       host: 'localhost',
       connection: {
-        filename: './src/database/db.sqlite'
+        filename: './src/database/dev.sqlite3'
       },
       migrations: {
         directory: './src/database/migrations'

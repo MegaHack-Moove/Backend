@@ -1,21 +1,20 @@
-const knex = require('./UserController')
 const passport = require('./LocalController')
+const connection = require('../database/connections')
 
 module.exports = {
     async register(req, res) {
-    knex
-        .from('user')
-        .insert({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        password: req.body.password,
-        })
-        .then(() => {
-        res.json({ success: true, message: "Data successfully inserted." })
-        })
-        .catch(() => {
-        res.json({ success: false, message: "Error in adding user. Please try again." })
+        await connection('user')
+            .insert({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            password: req.body.password,
+            })
+            .then(() => {
+            res.json({ success: true, message: "Data successfully inserted." })
+            })
+            .catch(() => {
+            res.json({ success: false, message: "Error in adding user. Please try again." })
         })
     },
 
