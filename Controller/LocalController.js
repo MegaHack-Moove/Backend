@@ -10,7 +10,9 @@ const options = {};
 init();
 
 passport.use(new LocalStrategy(options, (email, password, done) => {
-  knex('user').where('email', '=', email)
+  console.log(email)
+  console.log(password)
+  knex('users').where('email', '=', email)
     .then((user) => {
       if (!user) return done(null, false);
       if (!utils.comparePass(password, user.password)) {

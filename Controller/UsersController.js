@@ -18,26 +18,29 @@ module.exports = {
         })
     },
 
-    handleResponse(res, code, statusMsg) {
-        res.status(code).json({ status: statusMsg });
-    },
-
     async login(req, res, next) {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            handleResponse(res, 500, 'error');
-        }
-        if (!user) {
-            handleResponse(res, 404, 'User not found');
-        }
-        if (user) {
-        req.logIn(user, function (err) {
+        console.log(req)
+        console.log(res)
+        console.log(next)
+        passport.authenticate('local', (err, user, info) => {
             if (err) {
             handleResponse(res, 500, 'error');
             }
-            handleResponse(res, 200, 'success');
-        });
-        }
-    })(req, res, next);
+            if (!user) {
+            handleResponse(res, 404, 'User not found');
+            }
+            if (user) {
+            req.logIn(user, function (err) {
+                if (err) {
+                handleResponse(res, 500, 'error');
+                }
+                handleResponse(res, 200, 'success');
+            });
+            }
+        })(req, res, next);
     },
+
+    async handleResponse(res, code, statusMsg) {
+        res.status(code).json({ status: statusMsg });
+    }
 }
