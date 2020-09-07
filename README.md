@@ -19,3 +19,4 @@ Ionic: 6.11.7
 - 📱 [Ionic](https://ionicframework.com/)
 - 🎈 [Angular](https://angular.io/)
 - 💚 [NodeJS](https://nodejs.org/en/)
+- 💙 [SQLite](https://www.sqlite.org/index.html)
